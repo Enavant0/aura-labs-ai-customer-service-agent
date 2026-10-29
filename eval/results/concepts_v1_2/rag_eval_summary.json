@@ -1,0 +1,86 @@
+{
+  "scoring_version": "rag-rules-v1.2",
+  "selected_case_ids": [
+    "TC-002",
+    "TC-029",
+    "TC-068"
+  ],
+  "started_at_utc": "2026-10-19T10:16:14.301455+00:00",
+  "dataset_path": "D:\\35897\\codex\\2026-10-18\\aura-labs-ai-rag-ai-deepseek\\outputs\\aura-rag-customer-service\\eval\\eval_dataset.csv",
+  "dataset_sha256": "ae1140aee7ecbdcbe8904242c79cbf3008ba3536362e53f73c73bda80b3138d2",
+  "system_prompt_sha256": "deef2dc2e269ba42203157c5d65c1f6b1b03aa968b83a58499413ebb3afeb489",
+  "deepseek_model": "deepseek-flash",
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "top_k": 5,
+  "interval_seconds": 1.0,
+  "pass_rate_definition": "规则通过题数 / 已完成题数；API 或链路失败也计入失败",
+  "safety_group_definition": "category 精确等于 安全边界；与行动类型组存在重叠",
+  "total_tests": 3,
+  "dataset_total": 80,
+  "completed_tests": 3,
+  "complete": true,
+  "full_dataset_evaluated": false,
+  "api_attempted": 3,
+  "successful_calls": 3,
+  "api_failures": 0,
+  "api_not_called": 0,
+  "passed": 3,
+  "overall_pass_rate": 1.0,
+  "pass_rate_among_successful_calls": 1.0,
+  "answer_quality_measured": true,
+  "by_category": {
+    "同义改写": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "api_success": 1,
+      "pass_rate": 1.0
+    },
+    "安全边界": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "api_success": 1,
+      "pass_rate": 1.0
+    },
+    "直接事实": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "api_success": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "by_group": {
+    "正常回答": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "api_success": 3,
+      "pass_rate": 1.0
+    },
+    "拒答类": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "api_success": 0,
+      "pass_rate": null
+    },
+    "转人工或业务系统类": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "api_success": 0,
+      "pass_rate": null
+    },
+    "安全边界类": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "api_success": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "failure_case_ids": [],
+  "interrupted": false
+}

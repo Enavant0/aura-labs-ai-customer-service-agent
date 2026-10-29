@@ -1,0 +1,193 @@
+{
+  "agent_version": "1.1",
+  "dataset_version": "agent-eval-v1",
+  "scoring_version": "agent-rules-v1.1",
+  "answer_rules_version": "agent-rules-v1（必要概念及禁含逻辑保持不变）",
+  "retry_policy": {
+    "max_attempts_per_request": 3,
+    "wait_seconds": [
+      1,
+      2
+    ],
+    "http_status_codes": [
+      429,
+      500,
+      502,
+      503,
+      504
+    ],
+    "timeout": true
+  },
+  "started_at_utc": "2026-10-20T06:24:06.710600+00:00",
+  "selected_case_ids": [
+    "AG-001",
+    "AG-002",
+    "AG-003",
+    "AG-004",
+    "AG-005",
+    "AG-006",
+    "AG-007",
+    "AG-008",
+    "AG-009",
+    "AG-010",
+    "AG-011",
+    "AG-012",
+    "AG-013",
+    "AG-014",
+    "AG-015",
+    "AG-016",
+    "AG-017",
+    "AG-018",
+    "AG-019",
+    "AG-020",
+    "AG-021",
+    "AG-022",
+    "AG-023",
+    "AG-024",
+    "AG-025",
+    "AG-026",
+    "AG-027",
+    "AG-028",
+    "AG-029",
+    "AG-030",
+    "AG-031",
+    "AG-032",
+    "AG-033",
+    "AG-034",
+    "AG-035",
+    "AG-036",
+    "AG-037",
+    "AG-038",
+    "AG-039",
+    "AG-040"
+  ],
+  "dataset_path": "D:\\35897\\codex\\2026-10-18\\aura-labs-ai-rag-ai-deepseek\\outputs\\aura-rag-customer-service\\eval\\agent_eval_dataset.csv",
+  "dataset_sha256": "fc29924d22c671df096dec02d14287535e525c1e0cab475e9e41705b668bb947",
+  "file_sha256": {
+    "src/agent_service.py": "6d7129e0b376fec260f46c99a8b7363d719563bb769b095b5c4d5dda1ccf3677",
+    "src/tools.py": "eddd49286325d6424cb0bbf584abc0f24ab8142ff194e1a539709e6002158515",
+    "src/deepseek_client.py": "5272f42fa1696d3aa79722e6a20288b4b83b7381c06daec8f83c9f09ad695b2e",
+    "src/rag_service.py": "a18fa4b388cd227bf36a753dc81a614bf498e22cf7faa3eae5c2c9fc026890cb",
+    "src/retriever.py": "e8cb70e1ef13e1114014825565fdd39bbeb571c84781a344c7c0b0adc3f86aeb",
+    "src/embeddings.py": "043dcc8ab2583350b04b320aac6d09088fb8d71749562a97b2f158c4b09ef5ba",
+    "src/vector_store.py": "6e84686c074c22c389f56871d5295d756cf8854a7c91ca0f6e1e60eefa6ba077",
+    "src/agent_eval_rules.py": "241c57ed7c34dce8e32408b094ce9c1165f3faef1df92582f83a8c20741acaa7",
+    "src/eval_rules.py": "be9f7b517129451d1095a67df0fa395c5d92e3f870042589bbb1e48015382767",
+    "scripts/eval_agent.py": "557ee13f770f16e68a45d542591932efa5649356e9de41ed006a72d33eb0bcdb"
+  },
+  "knowledge_sha256": {
+    "after_sales.md": "1cc2260ef2410a55ba4900fa0f6c4127f9e62c91f2cfdd88057c3eaf7c497a2c",
+    "faq.md": "e806d6848816ace55a07427f6e784fea296f2bf25c5ddcec8d5c2eb0f89df463",
+    "ingredients.md": "40290ad4a833ab421e01ebf1df968b9d422e7cf7fd734a558f5a82ec2e9ff648",
+    "products.md": "650fca30b7da5e4d98a883770ffd5204221f5323043a647e5f5e5ee567605aa2",
+    "returns.md": "f758539544f4e07c211630c6ac5d478696fc71ba98f2678f91cf16d6cee720b6",
+    "shipping.md": "15b53e346b07a171597a96aca57cc281c280604accf44c86d304b18a74009a75"
+  },
+  "deepseek_model": "deepseek-flash",
+  "embedding_model": "BAAI/bge-small-zh-v1.5",
+  "top_k": 5,
+  "collection_name": "aura_customer_service",
+  "chunk_count": 122,
+  "interval_seconds": 1.0,
+  "metric_definitions": {
+    "path_accuracy": "路径严格相等 / 可取得决策的案例；决策 API 失败记 null 并单独计数，模型无效决策仍失败",
+    "tool_selection_accuracy": "调用列表恰好只有预期工具 / 可评分的 TOOL 案例；决策 API 失败除外，漏调、多调均失败",
+    "argument_accuracy": "选对唯一工具且参数字典完全相等 / 可评分的 TOOL 案例；决策 API 失败除外，检查类型和额外字段",
+    "handoff_accuracy": "实际 HANDOFF 且无工具调用 / 可评分的预期 HANDOFF 案例；包括补充信息，决策 API 失败除外",
+    "final_answer_pass_rate": "回答正文满足必要概念、禁含和有限工具事实校验且链路成功 / 全部已完成案例",
+    "no_unexpected_tool_accuracy": "无工具调用 / 可评分的预期 RAG 或 HANDOFF 案例；决策 API 失败除外",
+    "overall": "所有适用检查均通过 / 全部已完成案例；技术失败也记失败"
+  },
+  "limitations": "回答仍为 V1 固定关键词及有限事实校验；不放宽 AG-006/AG-037。V1.1 仅加强工具优先级、重试及技术失败计数。",
+  "total_cases": 40,
+  "dataset_total": 40,
+  "completed_cases": 40,
+  "complete": true,
+  "full_dataset_evaluated": true,
+  "successful_cases": 40,
+  "api_requests": 80,
+  "api_successful_requests": 80,
+  "api_logical_calls": 80,
+  "api_retries": 0,
+  "api_error_cases": 0,
+  "decision_api_unavailable": 0,
+  "path_error_case_ids": [],
+  "metrics": {
+    "path_accuracy": {
+      "passed": 40,
+      "total": 40,
+      "accuracy": 1.0
+    },
+    "tool_selection_accuracy": {
+      "passed": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "argument_accuracy": {
+      "passed": 20,
+      "total": 20,
+      "accuracy": 1.0
+    },
+    "handoff_accuracy": {
+      "passed": 12,
+      "total": 12,
+      "accuracy": 1.0
+    },
+    "final_answer_pass_rate": {
+      "passed": 39,
+      "total": 40,
+      "accuracy": 0.975
+    },
+    "no_unexpected_tool_accuracy": {
+      "passed": 20,
+      "total": 20,
+      "accuracy": 1.0
+    }
+  },
+  "overall": {
+    "passed": 39,
+    "total": 40,
+    "pass_rate": 0.975
+  },
+  "by_category": {
+    "HANDOFF": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1.0
+    },
+    "RAG": {
+      "total": 8,
+      "passed": 7,
+      "pass_rate": 0.875
+    },
+    "不存在订单": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "参数不足": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "对抗测试": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "订单工具": {
+      "total": 8,
+      "passed": 8,
+      "pass_rate": 1.0
+    },
+    "退款工具": {
+      "total": 7,
+      "passed": 7,
+      "pass_rate": 1.0
+    }
+  },
+  "failure_case_ids": [
+    "AG-006"
+  ],
+  "interrupted": false
+}

@@ -1,6 +1,6 @@
 # AURA LABS AI Customer Service Agent — Architecture
 
-事实依据：[PROJECT_STATUS.md](../PROJECT_STATUS.md)。当前实现：**Agent V1.1（冻结）＋ Streamlit MVP V0.1 ＋ Runtime Logging V0.1**。本文描述现有单进程 Python 应用，不增加新的运行组件。
+事实依据：[PROJECT_STATUS.md](../PROJECT_STATUS.md)。当前实现：**Agent V1.1（冻结）＋ Streamlit MVP V0.1 ＋ Runtime Logging V0.1**。本文描述现有单进程 Python 应用的结构与边界。
 
 ## 1. Architecture Overview
 
@@ -105,7 +105,7 @@ Streamlit 与 CLI 在请求完成或失败后调用日志辅助模块，追加�
 
 ## 5. Why This Architecture
 
-当前范围是小型学习与求职 Demo：一个知识库、两种只读查询、三条路径。直接 Python 模块足以说明数据如何进入模型、工具如何执行、结果如何返回，便于初学者理解和定位错误。
+当前范围是小型学习与求职 Demo：一个知识库、两种只读查询、三条路径。直接 Python 模块足以说明数据如何进入模型、工具如何执行、结果如何返回，便于理解与定位错误。
 
 | 当前未采用 | 本项目范围下的选择理由 |
 |---|---|
@@ -118,7 +118,7 @@ Streamlit 与 CLI 在请求完成或失败后调用日志辅助模块，追加�
 
 ## 6. Production Evolution
 
-**以下全部为 Not Implemented / Future Work，未实现，也不是本次收尾后的自动开发计划。**
+**以下全部为 Not Implemented / Future Work，未实现，不属于当前交付范围。**
 
 | 未来方向 | 走向真实业务前需要解决的问题 |
 |---|---|

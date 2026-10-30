@@ -5,7 +5,7 @@
     "TC-068"
   ],
   "started_at_utc": "2026-10-19T09:54:50.729678+00:00",
-  "dataset_path": "D:\\35897\\codex\\2026-10-18\\aura-labs-ai-rag-ai-deepseek\\outputs\\aura-rag-customer-service\\eval\\eval_dataset.csv",
+  "dataset_path": "eval/eval_dataset.csv",
   "dataset_sha256": "4f4e076f5cda1c64cbbf8ac86d35287a922240bba47bd28bcee3b85f54d2293c",
   "system_prompt_sha256": "deef2dc2e269ba42203157c5d65c1f6b1b03aa968b83a58499413ebb3afeb489",
   "deepseek_model": "deepseek-flash",

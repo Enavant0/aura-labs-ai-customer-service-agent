@@ -2,7 +2,7 @@
 
 记录日期：2026-10-20。项目阶段：**Portfolio Complete / 求职使用阶段**。当前版本：**Agent V1.1（冻结）＋ Streamlit UI MVP V0.1 ＋ 本地运行日志 V0.1**。
 
-本文是当前实现和已保存测试结果的状态快照，供项目交接和求职作品集使用；如未来另行修改功能、模型、数据或评分规则，应更新对应内容并保留历史基线。本次仅整理求职文档，冻结的 Agent、RAG、工具、知识库、UI、日志行为、评测数据及结果保持不变，没有新增 API 调用或重跑在线 Eval。
+本文记录实现版本、数据配置、测试基线、已知问题与运行方法。功能、模型、数据或评分规则发生变化时，应更新相应版本并保留历史基线。
 
 ## 1. 项目目标
 
@@ -29,7 +29,7 @@ flowchart TD
     G --> S[回答与程序生成的检索来源]
     D -->|TOOL| T[两个本地只读工具]
     T --> F[工具结果回传 DeepSeek]
-    F --> A[依据模拟数据生成回答]
+    F --> TA[依据模拟数据生成回答]
     D -->|HANDOFF| H[人工处理或补充信息提示]
 ```
 
@@ -57,10 +57,10 @@ flowchart TD
 
 ## 4. 目录结构
 
-实际项目根目录：
+项目根目录为包含 `app.py` 的 `aura-rag-customer-service/`：
 
 ```text
-D:\35897\codex\2026-10-18\aura-labs-ai-rag-ai-deepseek\outputs\aura-rag-customer-service
+aura-rag-customer-service
 ```
 
 ```text
@@ -112,11 +112,9 @@ aura-rag-customer-service/
 │   ├── test_deepseek_retry.py
 │   └── test_runtime_logger.py   # 日志隐私、故障隔离及两个入口检查
 ├── docs/
-│   ├── PRD.md                   # 立项视角补写的产品需求与验收规划
+│   ├── PRD.md                   # 产品需求与验收标准
 │   ├── CASE_STUDY.md            # Project Case Study V0.1，已完成
-│   ├── ARCHITECTURE.md          # 独立架构说明，已完成
-│   ├── RESUME_PROJECT.md        # 三个岗位方向的简历描述，已完成
-│   └── INTERVIEW_GUIDE.md       # 口述、Demo 与面试追问，已完成
+│   └── ARCHITECTURE.md          # 独立架构说明，已完成
 └── eval/
     ├── eval_dataset.csv         # 80 条 RAG / 检索测试
     ├── testset_change_log.md    # RAG 测试集修订记录
@@ -146,7 +144,7 @@ aura-rag-customer-service/
 | `ingredients.md` | 成分资料与可公开的信息边界 |
 | `after_sales.md` | 售后问题及处理要求 |
 
-三款产品为 AURA 氨基酸净澈洁面、AURA 平衡控油精华、AURA 舒缓修护面霜。以上是用户提供的虚构品牌资料，不自行补写企业事实。
+三款产品为 AURA 氨基酸净澈洁面、AURA 平衡控油精华、AURA 舒缓修护面霜。品牌资料用于演示，回答范围以知识库内容为准。
 
 - 现有 Collection：`aura_customer_service`。
 - 数据库目录：项目根目录下 `./chroma_db`。
@@ -287,7 +285,7 @@ Streamlit 只在用户提交的新问题处理结束处写入成功/失败记录
 
 ### 检索基线：80 条
 
-以下为此前已记录的批量检索结果，本次整理文档没有重新检索：
+已保存的批量检索基线如下：
 
 | 指标 | 命中数量 | 命中率 |
 |---|---:|---:|
@@ -306,7 +304,7 @@ Streamlit 只在用户提交的新问题处理结束处写入成功/失败记录
 | 最终回答规则通过率 | 38/80，47.5% |
 | API 失败 | 0 |
 
-这是历史 RAG 规则基线，未对全部 42 条失败做本次人工复核，不能据此认定它们全部是回答错误。目录中另有 2、3、11 条部分测试；它们不能替代完整 80 条基线，也不能与 Agent 的 40 条通过率混用。
+这是历史 RAG 规则基线，42 条失败尚未全部人工复核，不能据此认定它们全部是回答错误。目录中另有 2、3、11 条部分测试；它们不能替代完整 80 条基线，也不能与 Agent 的 40 条通过率混用。
 
 ### Agent V1 与 V1.1
 
@@ -324,7 +322,7 @@ V1.1 全量运行日期为 2026-10-20，来源为 `eval/agent_v1_1/agent_eval_su
 
 Agent/UI 阶段原有 74 项离线检查通过。日志 V0.1 新增 14 项后，完整 88 项检查全部通过。重试机制通过此前本地 SDK 故障注入验证，Agent V1.1 基线在线请求没有触发重试，不能宣称已在线观察到超时恢复。
 
-日志阶段另用四个 Streamlit 演示问题和一次 CLI 订单查询验收，产生 5 条实际日志，每次 API 尝试次数均为 2，没有为日志新增请求。四个 UI 请求后分别 rerun，日志均未重复；离线单元检查使用临时文件，没有污染真实日志。权限/磁盘故障注入下，Streamlit 与 CLI 仍能正常展示回答。本阶段没有重跑批量 Eval，以上历史基线不变。
+日志阶段另用四个 Streamlit 演示问题和一次 CLI 订单查询验收，产生 5 条实际日志，每次 API 尝试次数均为 2，没有为日志新增请求。四个 UI 请求后分别 rerun，日志均未重复；离线单元检查使用临时文件，没有污染真实日志。权限/磁盘故障注入下，Streamlit 与 CLI 仍能正常展示回答。日志接入验证不替代批量 Eval，以上结果属于对应版本的历史基线。
 
 所有自动回答通过率均为固定规则成绩，不等同于完整语义正确率，也不保证对未测试问题达到同样表现。
 
@@ -341,14 +339,14 @@ Agent/UI 阶段原有 74 项离线检查通过。日志 V0.1 新增 14 项后，
 9. **UI 执行详情有返回字段限制。** 当前 `AgentResult` 不返回每题 API/重试计数，页面不展示这些指标，也未为 UI 增加观测接口。运行日志可旁路读取 API 尝试次数，仍没有准确的额外 retry 计数；异常未返回 AgentResult 时，也无法记录已执行的部分路径和工具轨迹。
 10. **运行日志为最小版本。** 写入失败不会影响客服，但也不保证记录一定落盘；未实现自动轮转、告警或 Dashboard。日志按需人工查看和管理。
 
-真实浏览器人工验收已由用户在本阶段需求中确认完成；此前开发环境启动 Chrome 被拒绝的记录属于历史限制。本阶段针对日志接入使用 AppTest 和 CLI 验证，没有重新执行浏览器点验。
+验证记录包括浏览器人工验收、Streamlit AppTest 和 CLI 检查；日志接入验证采用 AppTest 与 CLI，未另行执行浏览器点验。
 
 ## 13. 当前版本
 
 | 项目 | 固定记录 |
 |---|---|
 | 项目状态 | Portfolio Complete / 求职使用阶段；Agent V1.1 冻结，Streamlit MVP V0.1 与本地运行日志 V0.1 已完成 |
-| 作品集材料 | Project Case Study V0.1、首页 README、Architecture、Resume Project、Interview Guide 均已完成；另补充立项视角 PRD V1.0 |
+| 作品集材料 | README、PRD V1.0、Architecture 与 Project Case Study V0.1 |
 | 运行日志 | `logs/runtime.jsonl`，JSONL，本地旁路，不进入 Git |
 | 原 RAG 功能基线 | RAG Baseline V1，业务流程及 Prompt 保持不变 |
 | RAG 测试集 / 规则 | `v1.2` / `rag-rules-v1.2` |
@@ -366,28 +364,26 @@ UI V0.1 仅新增 `app.py` 并更新本文；未修改 `src/`、原脚本、依�
 
 日志 V0.1 新增 `src/runtime_logger.py`、`tests/test_runtime_logger.py`，小幅修改 `app.py`、`scripts/test_agent.py`、`.gitignore`；旧 CLI 单元检查仅增加日志 mock，防止测试数据混入真实日志。Agent V1.1、RAG、Embedding、向量库相关模块、工具、Prompt、Eval Dataset、Eval Rules 和已保存结果均保持不变，没有重建 Chroma。
 
-## 14. 下一步计划
+## 14. 项目文档与后续方向
 
-核心开发已结束，项目已进入求职使用阶段。本次作品集收尾已完成：
+- [README](README.md)：项目概览、演示与启动入口。
+- [PRD V1.0](docs/PRD.md)：产品目标、需求范围与验收标准。
+- [Project Case Study V0.1](docs/CASE_STUDY.md)：方案选择、版本迭代与失败分析。
+- [Architecture](docs/ARCHITECTURE.md)：请求流程、模块职责与设计边界。
 
-- [README](README.md)：已重构为简洁的 GitHub 首页与求职作品集入口。
-- [PRD V1.0](docs/PRD.md)：按假设尚未开发的立项视角补写，定义目标、范围、需求与验收；不是历史调研记录或实际完成成绩。
-- [Project Case Study V0.1](docs/CASE_STUDY.md)：已完成，保留问题、方案、迭代与失败分析。
-- [Architecture](docs/ARCHITECTURE.md)：已完成，说明实际流程、模块职责与边界。
-
-作品集文档已按本文区分实际版本、历史成绩与规划视角，统一模型、工具及模拟系统边界。PRD 中的需求和验收是规划表达，实际完成情况仍以本文为准。本次只做文档检查，不把既有 88 项离线通过记录当作重新运行；未修改历史 Eval 数据。当前使用现有版本演示与准备面试，不自动新增 Agent 功能。第 12 节保留的已知问题及架构文档的未来方向，不代表另一个开发阶段已经启动。
+后续效果改进应先复核已知评分误判和历史 RAG 失败，区分资料、检索、回答与评分问题。真实业务接口、身份权限和写操作不属于当前版本范围，相关方向见架构说明。本文记录的既有成绩不因文档维护而变化。
 
 ## 15. 启动命令
 
 ### 进入项目
 
-以下为 Windows PowerShell 命令，均在实际项目根目录执行：
+以下为 Windows PowerShell 命令。从项目所在的上一级目录进入项目后执行：
 
 ```powershell
-cd "D:\35897\codex\2026-10-18\aura-labs-ai-rag-ai-deepseek\outputs\aura-rag-customer-service"
+cd .\aura-rag-customer-service
 ```
 
-本机已有 `.venv`、模型缓存和向量库，无需为正常启动重新安装或建库。新环境首次准备时执行：
+已配置好的环境无需重复安装或建库。公开仓库不包含本地虚拟环境、模型缓存和向量库；新环境先准备运行环境：
 
 ```powershell
 python -m venv .venv
@@ -440,4 +436,4 @@ UI 和 CLI 的实际请求会自动追加到 `logs/runtime.jsonl`，无需额外
 .\.venv\Scripts\python.exe scripts/eval_rag.py --output-dir eval/results/rag_manual_full
 ```
 
-评测会写入结果并产生 DeepSeek 请求费用；同一输出目录再次运行会覆盖其中的结果 CSV/JSON。建库脚本留作后续明确需要时使用，日常启动和以上评测均不需要重建现有 122 条知识记录。UI 阶段没有重新运行批量 Eval，也没有覆盖历史结果。
+评测会写入结果并产生 DeepSeek 请求费用；同一输出目录再次运行会覆盖其中的结果 CSV/JSON。建库脚本留作后续明确需要时使用，日常启动和以上评测均不需要重建现有 122 条知识记录。UI 接入检查与批量模型评测分别记录，保留历史结果。

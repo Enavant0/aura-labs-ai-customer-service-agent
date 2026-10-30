@@ -44,7 +44,7 @@
     "AG-039",
     "AG-040"
   ],
-  "dataset_path": "D:\\35897\\codex\\2026-10-18\\aura-labs-ai-rag-ai-deepseek\\outputs\\aura-rag-customer-service\\eval\\agent_eval_dataset.csv",
+  "dataset_path": "eval/agent_eval_dataset.csv",
   "dataset_sha256": "fc29924d22c671df096dec02d14287535e525c1e0cab475e9e41705b668bb947",
   "file_sha256": {
     "src/agent_service.py": "a224961e3ceceaa9ef1d94e31bb851f76e4c241380dee3756aafb18e19ca2105",

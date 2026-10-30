@@ -50,7 +50,7 @@ flowchart TD
 
 ## Evaluation
 
-以下均为**已保存的固定测试集结果**，本次文档收尾未重跑在线 Eval。
+以下均为**已保存的固定测试集结果**，各项指标采用对应测试集与评分版本。
 
 | 层次 / 测试规模 | 指标 | 结果 |
 |---|---|---:|
@@ -66,7 +66,7 @@ flowchart TD
 
 Top K 指标衡量预期**来源文件**是否被检索到，不是答案正确率。RAG 的 **47.5% 是自动规则通过率**，42 条失败尚未全部人工复核；不能全部归因于评分器，也不能直接称为 RAG 准确率。Agent 与 RAG 测试范围不同，分数不能互相替代。
 
-Agent 当前唯一自动失败为 AG-006：合理的同义拒答未命中规则候选表达，保留原始成绩。固定集上的 100% 路径成绩不能外推到真实流量。最近已完成的离线检查为 **88 项通过**，不代表本次重新执行。
+Agent 当前唯一自动失败为 AG-006：合理的同义拒答未命中规则候选表达，保留原始成绩。固定集上的 100% 路径成绩不能外推到真实流量。已完成的离线检查为 **88 项通过**。
 
 结果入口：[RAG 完整基线](eval/results/baseline_v1_2/rag_eval_summary.json)、[Agent V1.1 完整基线](eval/agent_v1_1/agent_eval_summary.json)。口径与版本见 [PROJECT_STATUS.md](PROJECT_STATUS.md)。
 
@@ -138,7 +138,7 @@ aura-rag-customer-service/
 ├── eval/                  # 固定测试集与保留的历史基线
 ├── tests/                 # 离线单元与界面检查
 ├── logs/                  # JSONL 运行摘要，不进入 Git
-├── docs/                  # 案例、架构、简历、面试材料
+├── docs/                  # 产品需求、架构与案例说明
 ├── PROJECT_STATUS.md      # 项目事实与版本记录
 ├── requirements.txt
 └── .env.example
@@ -150,7 +150,7 @@ aura-rag-customer-service/
 
 ## Documentation
 
-- [PRD：以立项视角补写的产品需求与验收规划](docs/PRD.md)
+- [PRD：产品需求与验收标准](docs/PRD.md)
 - [Case Study：问题、迭代与失败分析](docs/CASE_STUDY.md)
 - [Architecture：流程、模块与边界](docs/ARCHITECTURE.md)
-- [PROJECT_STATUS：唯一项目事实依据与完整命令](PROJECT_STATUS.md)
+- [PROJECT_STATUS：版本、测试基线与运行说明](PROJECT_STATUS.md)

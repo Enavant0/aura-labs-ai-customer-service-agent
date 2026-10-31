@@ -89,38 +89,41 @@ V1 暴露了实时状态查询的工具优先级问题。V1.1 仅加强 Tool 使
 
 ## Quick Start
 
-以下为 Windows PowerShell 命令，请在包含 `app.py` 的项目根目录执行。已有可用 `.venv` 时直接使用，无需重复安装。本机已测 Python 为 3.14.8、Streamlit 为 1.66.0；依赖尚未锁版本，不保证其他环境无需调整。
+只查看项目，可先读本文与 [Case Study](docs/CASE_STUDY.md)，技术细节见 [Architecture](docs/ARCHITECTURE.md)。GitHub 和 ZIP 提供源码、知识原文与评测证据，不是在线聊天服务。
+
+亲自运行请按以下顺序操作。命令适用于 Windows PowerShell，在包含 `app.py` 的项目根目录执行；完整步骤、验证环境和排错见 [本地运行说明](docs/RUNNING.md)。
 
 ```powershell
-# 仅新环境需要
+# 1. 新环境：安装依赖；已有可用环境则跳过
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
-# 仅在没有 .env 时复制，保留已有密钥配置
+# 2. 复制配置模板，并在 .env 中填写自己的 DeepSeek 密钥
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-在本地 `.env` 填写，勿提交真实密钥：
-
 ```dotenv
-DEEPSEEK_API_KEY=填写你自己的密钥
+DEEPSEEK_API_KEY=填写自己的密钥
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-flash
 ```
 
-**本地数据准备是前提。** Git 不包含 `.venv/`、`.model_cache/`、`chroma_db/` 或 `.env`。新环境需要准备原有 Chroma 数据和可用 BGE 模型缓存；首次加载模型可能需要下载。当前 Collection 为 `aura_customer_service`，122 条记录。正常启动不运行建库脚本，不重建冻结基线；仅克隆源码不能直接完成演示。
-
 ```powershell
-# 网页：按终端地址访问，默认 http://localhost:8501
+# 3. 仅没有数据库的新环境执行一次：下载/加载 BGE，生成本地知识索引
+.\.venv\Scripts\python.exe scripts/build_vector_store.py
+
+# 4. 启动网页，按终端地址访问，默认 http://localhost:8501
 .\.venv\Scripts\python.exe -m streamlit run app.py
 
-# 或使用命令行；exit / quit 退出
+# 或使用命令行，exit / quit 退出
 .\.venv\Scripts\python.exe scripts/test_agent.py
 ```
 
-两种入口均需要有效 DeepSeek 密钥和网络，实际请求会产生 API 费用；正常每题约两次模型请求。请求完成后自动写入 `logs/runtime.jsonl`，无需额外日志服务。记录可含真实 `api_attempts`，它是尝试次数，包含重试，不等于 `retry_count`。
+知识原文与建库脚本均已提供，**不需要作者电脑上的模型缓存或数据库**。首次加载 BGE 需要访问 Hugging Face，程序将模型保存在 `.model_cache/`；建库将当前六份 Markdown 转成 `chroma_db/` 中的 122 条记录，不调用 DeepSeek。已有可用数据库时跳过第 3 步，日常启动不重建，不默认使用 `--rebuild`。
 
-离线检查不调用 DeepSeek、不加载 BGE、不连接 Chroma：
+完整问答需要有效 DeepSeek 密钥、可用模型与额度，会产生 API 费用。`.env`、虚拟环境、模型缓存、数据库与运行日志均不进入 Git。依赖尚未完整锁定，环境信息和验证范围见运行说明。
+
+离线检查（不调用 DeepSeek、不加载 BGE、不连接 Chroma）：
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
@@ -150,6 +153,7 @@ aura-rag-customer-service/
 
 ## Documentation
 
+- [Running：安装、首次建库与排错](docs/RUNNING.md)
 - [PRD：产品需求与验收标准](docs/PRD.md)
 - [Case Study：问题、迭代与失败分析](docs/CASE_STUDY.md)
 - [Architecture：流程、模块与边界](docs/ARCHITECTURE.md)

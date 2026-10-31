@@ -31,7 +31,7 @@ flowchart TD
     KB[6 Markdown / 已完成建库] -. 现有 122 条知识记录 .-> C
 ```
 
-实线表示请求处理，虚线表示已有知识的数据关系或旁路记录。正常请求使用现有 Collection `aura_customer_service`，不重新切分、建库或向量化全部知识。Streamlit 在当前 Session 首次提交时初始化服务，之后复用。
+实线表示请求处理，虚线表示已有知识的数据关系或旁路记录。正常请求使用现有 Collection `aura_customer_service`，不重新切分、建库或向量化全部知识。Streamlit 在当前 Session 首次提交时初始化服务，之后复用。新环境需先用公开 Markdown 和建库脚本生成本地索引；模型缓存首次下载，无需复制作者的本地数据。步骤见 [本地运行说明](RUNNING.md)。
 
 三个路径的核心区别是事实来源与权限：RAG 使用静态企业资料；Tool 使用本地模拟的订单/退款状态；HANDOFF 提示超出当前能力的处理方式。后两者不代表已接入真实业务系统或人工队列。
 

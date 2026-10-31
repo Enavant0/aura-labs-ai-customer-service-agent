@@ -112,6 +112,7 @@ aura-rag-customer-service/
 │   ├── test_deepseek_retry.py
 │   └── test_runtime_logger.py   # 日志隐私、故障隔离及两个入口检查
 ├── docs/
+│   ├── RUNNING.md               # 安装、首次建库与排错
 │   ├── PRD.md                   # 产品需求与验收标准
 │   ├── CASE_STUDY.md            # Project Case Study V0.1，已完成
 │   └── ARCHITECTURE.md          # 独立架构说明，已完成
@@ -367,6 +368,7 @@ UI V0.1 仅新增 `app.py` 并更新本文；未修改 `src/`、原脚本、依�
 ## 14. 项目文档与后续方向
 
 - [README](README.md)：项目概览、演示与启动入口。
+- [Running](docs/RUNNING.md)：新环境安装、首次建库、启动与排错。
 - [PRD V1.0](docs/PRD.md)：产品目标、需求范围与验收标准。
 - [Project Case Study V0.1](docs/CASE_STUDY.md)：方案选择、版本迭代与失败分析。
 - [Architecture](docs/ARCHITECTURE.md)：请求流程、模块职责与设计边界。
@@ -390,7 +392,19 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-仅当尚无 `.env` 时复制 `.env.example` 为 `.env` 并填写 DeepSeek 密钥。启动 RAG/Agent 需要有效密钥和网络；单纯检索不调用 DeepSeek。新环境还需要原有 `chroma_db/` 和可用 BGE 缓存，首次加载模型可能需要下载。
+仅当尚无 `.env` 时复制 `.env.example` 为 `.env` 并填写 DeepSeek 密钥。启动 RAG/Agent 需要有效密钥、可用模型、额度和网络；建库与纯检索不调用 DeepSeek。
+
+### 新环境首次建库
+
+公开仓库已包含六份知识原文与建库脚本，不需要作者电脑上的数据库或模型缓存。没有数据库的新环境执行一次：
+
+```powershell
+.\.venv\Scripts\python.exe scripts/build_vector_store.py
+```
+
+首次加载 `BAAI/bge-small-zh-v1.5` 时从 Hugging Face 下载到 `.model_cache/`，随后生成本地 `chroma_db/`。使用当前资料，正常显示 Collection 为 `aura_customer_service`，知识片段与实际记录各 122 条。已有可用库时跳过，日常启动不重新建库；不要默认添加 `--rebuild`。
+
+2026-10-31 在临时副本中，使用既有依赖和模型缓存验证了首次建库、Top 5 检索及完整 88 项离线测试。原演示数据库和历史 Eval 结果未改动；没有重新验证全新依赖安装、联网下载或 DeepSeek 端到端调用。完整步骤与依赖版本见 [本地运行说明](docs/RUNNING.md)。
 
 ### 启动 Streamlit 展示界面
 
@@ -436,4 +450,4 @@ UI 和 CLI 的实际请求会自动追加到 `logs/runtime.jsonl`，无需额外
 .\.venv\Scripts\python.exe scripts/eval_rag.py --output-dir eval/results/rag_manual_full
 ```
 
-评测会写入结果并产生 DeepSeek 请求费用；同一输出目录再次运行会覆盖其中的结果 CSV/JSON。建库脚本留作后续明确需要时使用，日常启动和以上评测均不需要重建现有 122 条知识记录。UI 接入检查与批量模型评测分别记录，保留历史结果。
+评测会写入结果并产生 DeepSeek 请求费用；同一输出目录再次运行会覆盖其中的结果 CSV/JSON。建库脚本用于新环境首次生成索引或明确需要的修复；数据已准备好时，日常启动和以上评测均不需要重建现有 122 条知识记录。UI 接入检查与批量模型评测分别记录，保留历史结果。

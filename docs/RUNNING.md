@@ -1,10 +1,10 @@
 # 本地运行与验证
 
-只查看项目方案与结果，可阅读 [README](../README.md) 和 [Case Study](CASE_STUDY.md)，无需安装环境。下面步骤用于在自己的电脑运行 Demo；GitHub 仓库本身不是在线聊天页面。
+本页用于本地复现；仅查看方案与结果请读 [README](../README.md) / [Case Study](CASE_STUDY.md)。GitHub 不是在线聊天页面。
 
 ## 1. 获取代码并安装依赖
 
-以下命令适用于 Windows PowerShell。解压 HR 用 ZIP 后也可直接进入包含 `app.py` 的目录，跳过克隆步骤。
+命令适用于 Windows PowerShell。使用 ZIP 时，解压后进入包含 `app.py` 的目录，跳过克隆。
 
 ```powershell
 git clone https://github.com/Enavant0/aura-labs-ai-customer-service-agent.git aura-rag-customer-service
@@ -32,11 +32,11 @@ DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-flash
 ```
 
-完整客服回答需要可访问 DeepSeek API 的网络、有效密钥和可用额度，会产生 API 费用。模型名可通过环境变量切换，但必须是账户实际可用的模型；变更模型后的运行不能视为原模型基线的复现。纯建库、检索和离线单元检查不调用 DeepSeek。
+问答需要有效密钥、账户可用模型、额度及网络，会产生 API 费用；切换模型不视为复现原基线。建库、检索及离线单元检查不调用 DeepSeek。
 
 ## 3. 首次建立本地知识索引
 
-仓库已包含六份 `knowledge_base/*.md` 原文与建库脚本，不需要获取作者电脑上的数据库。模型缓存和向量库属于本地运行产物：
+六份 `knowledge_base/*.md` 原文和建库脚本已提供，不需复制作者的数据：
 
 | 目录 | 如何得到 |
 |---|---|
@@ -49,7 +49,7 @@ DEEPSEEK_MODEL=deepseek-flash
 .\.venv\Scripts\python.exe scripts/build_vector_store.py
 ```
 
-首次下载需要能够访问 `huggingface.co`，耗时取决于网络。建库不需要 DeepSeek 密钥，不会调用 DeepSeek。使用当前六份原文，正常结束应显示：
+首次下载需访问 `huggingface.co`。建库不需要 DeepSeek 密钥，使用当前资料应显示：
 
 ```text
 Collection：aura_customer_service
@@ -57,7 +57,7 @@ Collection：aura_customer_service
 Chroma 实际记录：122
 ```
 
-已建立可用数据库的环境跳过本步。日常启动不会重新切分或建库；脚本发现已有非空 Collection 会停止，避免覆盖。`--rebuild` 会删除并重建该 Collection，仅限明确需要修复自己的索引时使用，不是普通启动步骤。
+已有可用库时跳过本步，日常启动不重建。脚本遇到非空 Collection 会停止；`--rebuild` 会删除并重建该集合，仅限明确修复索引时使用。
 
 ## 4. 检查检索并启动界面
 
@@ -67,7 +67,7 @@ Chroma 实际记录：122
 .\.venv\Scripts\python.exe scripts/test_retrieval.py
 ```
 
-输入“洁面多少钱？”，应看到最多五条实际片段，以及来源、标题、编号和距离。输入 `exit` 或 `quit` 退出。
+输入“洁面多少钱？”，查看最多五条片段的来源、标题、编号和距离；`exit` / `quit` 退出。
 
 启动网页：
 
@@ -75,7 +75,7 @@ Chroma 实际记录：122
 .\.venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-打开终端显示的地址，通常是 `http://localhost:8501`。按顺序测试“洁面多少钱？”“订单 123456 到哪里了？”“123456 退款到账了吗？”“我要人工客服。”，展开执行详情查看 RAG、模拟工具和 HANDOFF。
+打开终端地址（通常为 `http://localhost:8501`），按 [README 四步演示](../README.md) 提问并展开执行详情。
 
 也可使用同一服务的命令行入口：
 
@@ -115,7 +115,7 @@ Chroma 实际记录：122
 | sentence-transformers | 6.1.0 |
 | torch | 2.14.1 |
 
-上述验证没有重新执行全新环境安装、首次联网下载或 DeepSeek 端到端调用，不保证任意环境下安装一次即可成功，也不更新历史 Eval 成绩。原始基线及其口径见 [项目状态](../PROJECT_STATUS.md)。
+未复测全新安装、首次联网下载或 DeepSeek 端到端调用，不保证跨环境一次成功；历史 Eval 不变，口径见 [项目状态](../PROJECT_STATUS.md)。
 
 离线单元检查：
 

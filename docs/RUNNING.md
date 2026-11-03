@@ -1,6 +1,8 @@
 # 本地运行与验证
 
-本页用于本地复现；仅查看方案与结果请读 [README](../README.md) / [Case Study](CASE_STUDY.md)。GitHub 不是在线聊天页面。
+本页说明怎样在本地运行项目。只想了解能力与结果，可先读 [README](../README.md) 和 [项目案例](CASE_STUDY.md)；GitHub 仓库本身不提供在线聊天。
+
+运行需要两部分：本地知识索引，以及调用 DeepSeek 的有效配置。建库和纯检索可以先独立验证，不需要调用生成 API。
 
 ## 1. 获取代码并安装依赖
 
@@ -14,7 +16,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-已有可用虚拟环境时无需重复创建或安装。验证环境为 Windows、Python 3.14.8，BGE 使用 CPU，不要求 GPU。
+已有可用虚拟环境时，跳过重复创建和安装。已验证环境为 Windows、Python 3.14.8；BGE 使用 CPU，不要求 GPU。
 
 ## 2. 配置 DeepSeek
 
@@ -32,7 +34,7 @@ DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-flash
 ```
 
-问答需要有效密钥、账户可用模型、额度及网络，会产生 API 费用；切换模型不视为复现原基线。建库、检索及离线单元检查不调用 DeepSeek。
+完整问答需要有效密钥、账户可用模型、额度和网络，会产生 API 费用。这里的 `deepseek-flash` 是历史评测使用的配置；如果切换模型，应单独记录，不能当作相同条件下复现原成绩。建库、纯检索和离线单元检查不调用 DeepSeek。
 
 ## 3. 首次建立本地知识索引
 
@@ -57,7 +59,7 @@ Collection：aura_customer_service
 Chroma 实际记录：122
 ```
 
-已有可用库时跳过本步，日常启动不重建。脚本遇到非空 Collection 会停止；`--rebuild` 会删除并重建该集合，仅限明确修复索引时使用。
+已有可用知识库时跳过本步，日常启动不重建。Collection 指 Chroma 中存放知识记录的集合；脚本发现集合非空会停止，避免覆盖已有记录。`--rebuild` 会删除并重建该集合，只在明确需要修复索引时使用。
 
 ## 4. 检查检索并启动界面
 
@@ -67,7 +69,7 @@ Chroma 实际记录：122
 .\.venv\Scripts\python.exe scripts/test_retrieval.py
 ```
 
-输入“洁面多少钱？”，查看最多五条片段的来源、标题、编号和距离；`exit` / `quit` 退出。
+输入“洁面多少钱？”，应显示最多五个知识片段及其来源、标题、编号和距离。当前使用余弦距离，数值越小表示向量方向越接近、排名越靠前。输入 `exit` / `quit` 退出。
 
 启动网页：
 
@@ -83,7 +85,7 @@ Chroma 实际记录：122
 .\.venv\Scripts\python.exe scripts/test_agent.py
 ```
 
-订单和退款均为本地固定模拟数据；HANDOFF 仅提示人工处理。每题独立，页面显示历史不作为 Agent 记忆。
+订单和退款读取固定的本地模拟数据。HANDOFF 表示人工处理或补充信息提示，没有实际接通客服。每题独立，页面显示历史不作为 Agent 记忆。
 
 ## 5. 常见问题
 
@@ -102,7 +104,7 @@ Chroma 实际记录：122
 
 ## 6. 验证范围与版本
 
-已在临时项目副本中，使用既有依赖和 BGE 缓存完成首次建库及 Top 5 检索验证：122 条记录，产品查询取回五条结果并命中产品来源，完整 88 项离线测试通过。原演示数据库未改动。
+已在临时项目副本中，使用既有依赖和 BGE 缓存验证了首次建库与前五个结果检索：生成 122 条记录，产品查询返回五个结果并命中产品来源，完整 88 项离线测试通过。原演示数据库未改动。
 
 验证所用依赖如下，供环境排查参考；`requirements.txt` 尚未锁定完整依赖树，以下表格不是锁文件：
 
@@ -115,7 +117,7 @@ Chroma 实际记录：122
 | sentence-transformers | 6.1.0 |
 | torch | 2.14.1 |
 
-未复测全新安装、首次联网下载或 DeepSeek 端到端调用，不保证跨环境一次成功；历史 Eval 不变，口径见 [项目状态](../PROJECT_STATUS.md)。
+这项验证没有重新覆盖全新依赖安装、首次联网下载或完整 DeepSeek 问答调用，因此不能保证所有新环境一次运行成功。历史评测成绩没有改变，范围和口径见 [项目状态](../PROJECT_STATUS.md)。
 
 离线单元检查：
 
